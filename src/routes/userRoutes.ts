@@ -8,7 +8,7 @@ import { verifyAuthTokenExists } from "../middlewares/user/verifyAuthTokenExists
 
 const router = Router();
 
-//Creates a new User
+// Creates a new User
 
 router.post('/create-user',
     body('name')
@@ -29,6 +29,21 @@ router.post('/create-user',
     UserController.createUser
 );
 
+// Login
+
+router.post('/login',
+    body('email')
+        .isEmail().withMessage('email no válido')
+        .notEmpty().withMessage('El email es obligatorio'),
+    body('password')
+        .isString().withMessage('password no válido')
+        .notEmpty().withMessage('El password es obligatorio'),
+    verifyReqErrors,
+    UserController.login
+);
+
+// Confirms the account
+
 router.post('/confirm-user',
     body('token')
         .isString().withMessage('token no válido')
@@ -37,5 +52,6 @@ router.post('/confirm-user',
     verifyAuthTokenExists,
     UserController.confirmUser
 );
+
 
 export default router;
