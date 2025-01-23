@@ -1,7 +1,7 @@
 import { Document, PopulatedDoc, Schema, model, Types } from "mongoose";
 import { IUser } from "./User.model";
 
-interface IToken extends Document{
+export interface IToken extends Document{
     token: string;
     user: PopulatedDoc<IUser & Document>;
     createdAt: NativeDate;

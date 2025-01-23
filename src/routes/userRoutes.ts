@@ -4,6 +4,7 @@ import { verifyReqErrors } from "../middlewares/verifyReqErrors";
 import UserController from "../controllers/UserController";
 import { verifyPasswords } from "../middlewares/user/verifyPasswords";
 import { verifyRegisteredEmail } from '../middlewares/user/verifyRegisteredEmail';
+import { verifyAuthTokenExists } from "../middlewares/user/verifyAuthTokenExists";
 
 const router = Router();
 
@@ -26,6 +27,15 @@ router.post('/create-user',
     verifyRegisteredEmail,
     verifyPasswords,
     UserController.createUser
+);
+
+router.post('/confirm-user',
+    body('token')
+        .isString().withMessage('token no válido')
+        .notEmpty().withMessage('El token es obligatorio'),
+    verifyReqErrors,
+    verifyAuthTokenExists,
+    UserController.confirmUser
 );
 
 export default router;
