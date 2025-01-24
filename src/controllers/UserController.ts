@@ -4,11 +4,12 @@ import { encryptPassword } from "../utils/encryptPassword";
 import { Token } from "../models/Token.model";
 import { generarAuthToken } from '../utils/generateAuthToken';
 import { comparePassword } from "../utils/comparePassword";
+import AuthEmail from "../emails/AuthEmail";
 
 export default class UserController {
     static createUser = async (req: Request, res: Response): Promise<void> => {
         try {
-            const { password }: { password: string } = req.body;
+            const { password, email }: { password: string, email: string } = req.body;
             const user = new User(req.body);
 
             user.password = await encryptPassword(password);
@@ -19,7 +20,9 @@ export default class UserController {
                 user: user._id,
             })
 
-            await Promise.allSettled([user.save(), authToken.save()]);
+            const { token }: { token: string } = authToken;
+
+            await Promise.allSettled([user.save(), authToken.save(), AuthEmail.sendAuthToken(email, token)]);
             res.status(201).send('Usuario creado exitosamente! Te hemos enviado un email para confirmar tu cuenta!');
         } catch (error) {
             res.status(500).send('Hubo un error!');
@@ -32,16 +35,17 @@ export default class UserController {
             const { password }: { password: string } = req.body;
 
             //Verifies that the user is verified
-            const { verified }: { verified: boolean } = user;
+            const { verified, email }: { verified: boolean, email: string } = user;
 
             if (!verified) {
                 const authToken = new Token({
                     token: generarAuthToken(),
                     type: 'Confirm User',
                     user: user._id,
-                })
+                });
 
-                await authToken.save();
+                const { token }: { token: string } = authToken;
+                await Promise.allSettled([authToken.save(), AuthEmail.sendAuthToken(email, token)]);
                 res.status(409).send('Tu cuenta no está confirmada! Te hemos enviado un email para confirmar tu cuenta!');
                 return;
             }
@@ -65,7 +69,7 @@ export default class UserController {
     static requestAuthToken = async (req: Request, res: Response): Promise<void> => {
         try {
             const user = req.user;
-            const { verified } = user;
+            const { verified, email }: { verified: boolean, email: string } = user;
 
             if (verified) {
                 res.status(409).send('La cuenta ya está confirmada!');
@@ -78,7 +82,8 @@ export default class UserController {
                 user: user._id,
             })
 
-            await authToken.save();
+            const { token }: { token: string } = authToken;
+            await Promise.allSettled([authToken.save(), AuthEmail.sendAuthToken(email, token)]);
             res.send('Te hemos enviado un email para confirmar tu cuenta!');
 
         } catch (error) {
@@ -89,6 +94,7 @@ export default class UserController {
     static requestPasswordChange = async (req: Request, res: Response): Promise<void> => {
         try {
             const user = req.user;
+            const { email }: { email:string } = user;
 
             const authToken = new Token({
                 token: generarAuthToken(),
@@ -96,7 +102,8 @@ export default class UserController {
                 user: user._id,
             })
 
-            await authToken.save();
+            const { token }: { token: string } = authToken;
+            await Promise.allSettled([authToken.save(), AuthEmail.sendPasswordToken(email, token)]);
             res.send('Te hemos enviado un email para confirmar el cambio de password!');
 
         } catch (error) {
