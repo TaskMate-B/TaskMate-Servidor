@@ -5,6 +5,7 @@ import UserController from "../controllers/UserController";
 import { verifyPasswords } from "../middlewares/user/verifyPasswords";
 import { verifyRegisteredEmail } from '../middlewares/user/verifyRegisteredEmail';
 import { verifyAuthTokenExists } from "../middlewares/user/verifyAuthTokenExists";
+import { verifyUserExists } from "../middlewares/user/verifyUserExists";
 
 const router = Router();
 
@@ -39,10 +40,44 @@ router.post('/login',
         .isString().withMessage('password no válido')
         .notEmpty().withMessage('El password es obligatorio'),
     verifyReqErrors,
+    verifyUserExists,
     UserController.login
 );
 
-// Confirms the account
+// Requests a new AUTH TOKEN
+
+router.post('/request-token',
+    body('email')
+        .isEmail().withMessage('email no válido')
+        .notEmpty().withMessage('El email es obligatorio'),
+    verifyReqErrors,
+    verifyUserExists,
+    UserController.requestAuthToken
+);
+
+// Requests a new AUTH TOKEN
+
+router.post('/request-auth-token',
+    body('email')
+        .isEmail().withMessage('email no válido')
+        .notEmpty().withMessage('El email es obligatorio'),
+    verifyReqErrors,
+    verifyUserExists,
+    UserController.requestAuthToken
+);
+
+// Requests a PASSWORD CHANGE
+
+router.post('/request-password-change',
+    body('email')
+        .isEmail().withMessage('email no válido')
+        .notEmpty().withMessage('El email es obligatorio'),
+    verifyReqErrors,
+    verifyUserExists,
+    UserController.requestPasswordChange
+);
+
+// Confirms the user
 
 router.post('/confirm-user',
     body('token')
@@ -51,6 +86,17 @@ router.post('/confirm-user',
     verifyReqErrors,
     verifyAuthTokenExists,
     UserController.confirmUser
+);
+
+// Confirms the password change TOKEN
+
+router.post('/confirm-password-token',
+    body('token')
+        .isString().withMessage('token no válido')
+        .notEmpty().withMessage('El token es obligatorio'),
+    verifyReqErrors,
+    verifyAuthTokenExists,
+    UserController.confirmPasswordToken
 );
 
 

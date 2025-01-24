@@ -1,8 +1,14 @@
 import { Document, PopulatedDoc, Schema, model, Types } from "mongoose";
 import { IUser } from "./User.model";
 
+enum TokenType{
+    CONFIRM_ACCOUNT= 'Confirm User',
+    PASSWORD_CHANGE= 'Password Change',
+}
+
 export interface IToken extends Document{
     token: string;
+    type: TokenType;
     user: PopulatedDoc<IUser & Document>;
     createdAt: NativeDate;
 }
@@ -10,6 +16,12 @@ export interface IToken extends Document{
 const tokenSchema = new Schema<IToken>({
     token: {
         type: String,
+        required: true,
+    },
+
+    type: {
+        type: String,
+        enum: TokenType,
         required: true,
     },
 

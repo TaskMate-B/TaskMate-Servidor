@@ -15,6 +15,7 @@ export default class UserController {
 
             const authToken = new Token({
                 token: generarAuthToken(),
+                type: 'Confirm User',
                 user: user._id,
             })
 
@@ -27,21 +28,16 @@ export default class UserController {
 
     static login = async (req: Request, res: Response): Promise<void> => {
         try {
-            //Verifies that the user exists
-            const { email, password }: { email: string, password: string } = req.body;
-            const user = await User.findOne({email});
-
-            if ( !user ) {
-                res.status(404).send('No se encontró al usuario con el email registrado!');
-                return;
-            }
+            const user = req.user;
+            const { password }: { password: string } = req.body;
 
             //Verifies that the user is verified
             const { verified }: { verified: boolean } = user;
 
-            if ( !verified ) {
+            if (!verified) {
                 const authToken = new Token({
                     token: generarAuthToken(),
+                    type: 'Confirm User',
                     user: user._id,
                 })
 
@@ -54,7 +50,7 @@ export default class UserController {
 
             const compareResult = await comparePassword(password, user.password);
 
-            if( !compareResult ) {
+            if (!compareResult) {
                 res.status(401).send('El password es incorrecto!');
                 return;
             }
@@ -66,9 +62,58 @@ export default class UserController {
         }
     }
 
+    static requestAuthToken = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const user = req.user;
+            const { verified } = user;
+
+            if (verified) {
+                res.status(409).send('La cuenta ya está confirmada!');
+                return;
+            }
+
+            const authToken = new Token({
+                token: generarAuthToken(),
+                type: 'Confirm User',
+                user: user._id,
+            })
+
+            await authToken.save();
+            res.send('Te hemos enviado un email para confirmar tu cuenta!');
+
+        } catch (error) {
+            res.send('Tu cuenta ha sido confirmada!');
+        }
+    }
+
+    static requestPasswordChange = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const user = req.user;
+
+            const authToken = new Token({
+                token: generarAuthToken(),
+                type: 'Password Change',
+                user: user._id,
+            })
+
+            await authToken.save();
+            res.send('Te hemos enviado un email para confirmar el cambio de password!');
+
+        } catch (error) {
+            res.send('Tu cuenta ha sido confirmada!');
+        }
+    }
+
     static confirmUser = async (req: Request, res: Response): Promise<void> => {
         try {
             const authToken = req.authToken;
+            const { type }: { type: string } = authToken;
+
+            if (type !== 'Confirm User') {
+                res.status(409).send('El token no es válido');
+                return;
+            }
+
             const user = req.user;
             user.verified = true;
             await Promise.allSettled([user.save(), authToken.deleteOne()]);
@@ -77,5 +122,17 @@ export default class UserController {
         } catch (error) {
             res.status(500).send('Hubo un error!');
         }
+    }
+
+    static confirmPasswordToken = async (req: Request, res: Response): Promise<void> => {
+        const authToken = req.authToken;
+        const { type }: { type: string } = authToken;
+        
+        if (type !== 'Password Change') {
+            res.status(409).send('El token no es válido');
+            return;
+        }
+
+        res.send('Introduce los siguientes datos para cambiar tu password!');
     }
 }
