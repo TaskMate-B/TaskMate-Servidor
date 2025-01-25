@@ -26,4 +26,8 @@ router.post('/create-project',
     ProjectController.createProject,
 );
 
+// Gets the projects
+
+router.get('/get-projects', ProjectController.getProjects);
+
 export default router;

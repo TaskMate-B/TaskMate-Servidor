@@ -4,8 +4,8 @@ import { Project } from '../models/Project.model';
 export default class ProjectController{
     static createProject = async (req: Request, res: Response): Promise<void> => {
         try {
-            const { title, client, description }: { title: string, client: string, description: string } = req.body;
             const verifiedUser = req.verifiedUser;
+            const { title, client, description }: { title: string, client: string, description: string } = req.body;
 
             const project = new Project({
                 title,
@@ -17,6 +17,21 @@ export default class ProjectController{
             await project.save();
 
             res.status(201).send('Projecto creado exitosamente!');
+        } catch (error) {
+            res.status(500).send('Hubo un error');
+        }
+    }
+
+    static getProjects = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const verifiedUser = req.verifiedUser;
+            const projects = await Project.find({
+                $or: [
+                    {manager: verifiedUser._id}
+                ]
+            });
+
+            res.json(projects);
         } catch (error) {
             res.status(500).send('Hubo un error');
         }
