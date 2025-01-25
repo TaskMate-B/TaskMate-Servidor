@@ -39,4 +39,13 @@ export default class TaskController{
             res.status(500).send('Hubo un error!');
         }
     }
+
+    static getTaskByID = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const task = req.task;
+            res.json(task);
+        } catch (error) {
+            res.status(500).send('Hubo un error!');
+        }
+    }
 }
