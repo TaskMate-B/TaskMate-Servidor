@@ -142,4 +142,25 @@ export default class UserController {
 
         res.send('Introduce los siguientes datos para cambiar tu password!');
     }
+
+    static changePassword = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const user = req.user;
+            const authToken = req.authToken;
+            const { type }: { type: string } = authToken;
+            const { password }: { password: string } = req.body;
+
+            if (type !== 'Password Change') {
+                res.status(409).send('El token no es válido');
+                return;
+            }
+
+            user.password = await encryptPassword(password);
+            await Promise.allSettled([user.save(), authToken.deleteOne()]);
+
+            res.send('El password fue modificado exitosamente!');
+        } catch (error) {
+            res.status(500).send('Hubo un error!');
+        }
+    }
 }
