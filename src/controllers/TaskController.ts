@@ -24,6 +24,7 @@ export default class TaskController{
 
             project.tasks.push(task);
             await Promise.allSettled([task.save(), project.save()]);
+
             res.status(201).send('Tarea creada correctamente!');
         } catch (error) {
             res.status(500).send('Hubo un error!');
@@ -34,6 +35,7 @@ export default class TaskController{
         try {
             const { projectID } = req.params;
             const tasks = await Task.find().or([{project: projectID}]);
+
             res.json(tasks);
         } catch (error) {
             res.status(500).send('Hubo un error!');
@@ -44,6 +46,29 @@ export default class TaskController{
         try {
             const task = req.task;
             res.json(task);
+        } catch (error) {
+            res.status(500).send('Hubo un error!');
+        }
+    }
+
+    static updateTask = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const task = req.task;
+            await task.updateOne(req.body);
+            await task.save();
+
+            res.send('Tarea actualizada correctamente!');
+        } catch (error) {
+            res.status(500).send('Hubo un error!');
+        }
+    }
+
+    static deleteTask = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const task = req.task;
+            await task.deleteOne();
+
+            res.send('Tarea eliminada correctamente!');
         } catch (error) {
             res.status(500).send('Hubo un error!');
         }

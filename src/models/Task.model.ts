@@ -1,16 +1,16 @@
 import { Document, PopulatedDoc, Schema, Types, model } from "mongoose";
 import { IProject } from "./Project.model";
 
-enum TaskStatus {
-    PENDING = 'Pending',
-    IN_PROGRESS = 'In Progress',
-    UNDER_REVIEW = 'Under Review',
-    COMPLETED = 'Completed',
-}
+const TaskStatus = {
+    PENDING: 'Pending',
+    IN_PROGRESS: 'In Progress',
+    UNDER_REVIEW: 'Under Review',
+    COMPLETED: 'Completed',
+} as const;
 
 export interface ITask extends Document {
     title: string;
-    status: TaskStatus,
+    status: typeof TaskStatus[keyof typeof TaskStatus],
     description: string;
     project: PopulatedDoc<IProject & Document>;
 }
@@ -23,7 +23,7 @@ const taskSchema = new Schema<ITask>({
 
     status: {
         type: String,
-        enum: TaskStatus,
+        enum: Object.values(TaskStatus),
         required: true,
     },
 

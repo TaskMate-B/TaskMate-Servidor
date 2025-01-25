@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { User } from '../models/User.model';
 import { encryptPassword } from "../utils/encryptPassword";
-import { Token } from "../models/Token.model";
+import { Token, TokenType } from "../models/Token.model";
 import { generarAuthToken } from '../utils/generateAuthToken';
 import { comparePassword } from "../utils/comparePassword";
 import AuthEmail from "../emails/AuthEmail";
@@ -17,7 +17,7 @@ export default class UserController {
 
             const authToken = new Token({
                 token: generarAuthToken(),
-                type: 'Confirm User',
+                type: TokenType['CONFIRM_ACCOUNT'],
                 user: user._id,
             })
 
@@ -41,7 +41,7 @@ export default class UserController {
             if (!verified) {
                 const authToken = new Token({
                     token: generarAuthToken(),
-                    type: 'Confirm User',
+                    type: TokenType['CONFIRM_ACCOUNT'],
                     user: user._id,
                 });
 
@@ -82,7 +82,7 @@ export default class UserController {
 
             const authToken = new Token({
                 token: generarAuthToken(),
-                type: 'Confirm User',
+                type: TokenType['CONFIRM_ACCOUNT'],
                 user: user._id,
             })
 
@@ -102,7 +102,7 @@ export default class UserController {
 
             const authToken = new Token({
                 token: generarAuthToken(),
-                type: 'Password Change',
+                type: TokenType['PASSWORD_CHANGE'],
                 user: user._id,
             })
 
@@ -120,7 +120,7 @@ export default class UserController {
             const authToken = req.authToken;
             const { type }: { type: string } = authToken;
 
-            if (type !== 'Confirm User') {
+            if (type !== TokenType['CONFIRM_ACCOUNT']) {
                 res.status(409).send('El token no es válido');
                 return;
             }

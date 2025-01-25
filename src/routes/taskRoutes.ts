@@ -50,4 +50,37 @@ router.get('/get-task/:projectID/:taskID',
     TaskController.getTaskByID,
 );
 
+// Updates a Task
+
+router.put('/update-task/:projectID/:taskID',
+    param('projectID')
+        .isMongoId().withMessage('projectID no válido'),
+    param('taskID')
+        .isMongoId().withMessage('taskID no válido'),
+    body('title')
+        .isString().withMessage('title no válido')
+        .notEmpty().withMessage('El title es obligatorio'),
+    body('status')
+        .isString().withMessage('status no válido')
+        .notEmpty().withMessage('El status es obligatorio'),
+    body('description')
+        .isString().withMessage('description no válido')
+        .notEmpty().withMessage('El description es obligatorio'),
+    verifyReqErrors,
+    verifyTaskExists,
+    TaskController.updateTask,
+);
+
+// Deletes a Task
+
+router.delete('/delete-task/:projectID/:taskID',
+    param('projectID')
+        .isMongoId().withMessage('projectID no válido'),
+    param('taskID')
+        .isMongoId().withMessage('taskID no válido'),
+    verifyReqErrors,
+    verifyTaskExists,
+    TaskController.deleteTask,
+);
+
 export default router;
