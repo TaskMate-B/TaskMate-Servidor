@@ -1,9 +1,11 @@
-import { Document, Schema, model } from "mongoose";
+import { Document, PopulatedDoc, Schema, Types, model } from "mongoose";
+import { IUser } from "./User.model";
 
 interface IProject extends Document{
     title: string;
     client: string
     description: string;
+    manager: PopulatedDoc<IUser & Document>;
 }
 
 const projectSchema = new Schema<IProject>({
@@ -21,6 +23,11 @@ const projectSchema = new Schema<IProject>({
         type: String,
         required: true,
     },
+
+    manager: {
+        type: Types.ObjectId,
+        ref: 'User',
+    }
 }, {timestamps: true});
 
 export const Project = model<IProject>('Project', projectSchema);

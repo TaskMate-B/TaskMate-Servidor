@@ -36,7 +36,7 @@ export default class UserController {
             const { password }: { password: string } = req.body;
 
             //Verifies that the user is verified
-            const { verified, email, name }: { verified: boolean, email: string, name: string } = user;
+            const { verified, email }: { verified: boolean, email: string } = user;
 
             if (!verified) {
                 const authToken = new Token({
@@ -62,8 +62,6 @@ export default class UserController {
 
             const jwt = generateJWT({
                 _id: (<string> user._id),
-                email,
-                name,
             });
             res.send(jwt);
 
