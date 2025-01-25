@@ -5,6 +5,7 @@ export interface IProject extends Document{
     title: string;
     client: string
     description: string;
+    status: boolean;
     manager: PopulatedDoc<IUser & Document>;
 }
 
@@ -21,6 +22,12 @@ const projectSchema = new Schema<IProject>({
 
     description: {
         type: String,
+        required: true,
+    },
+
+    status: {
+        type: Boolean,
+        default: true,
         required: true,
     },
 
