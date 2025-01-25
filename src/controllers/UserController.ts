@@ -5,6 +5,7 @@ import { Token } from "../models/Token.model";
 import { generarAuthToken } from '../utils/generateAuthToken';
 import { comparePassword } from "../utils/comparePassword";
 import AuthEmail from "../emails/AuthEmail";
+import { generateJWT } from "../utils/generateJWT";
 
 export default class UserController {
     static createUser = async (req: Request, res: Response): Promise<void> => {
@@ -35,7 +36,7 @@ export default class UserController {
             const { password }: { password: string } = req.body;
 
             //Verifies that the user is verified
-            const { verified, email }: { verified: boolean, email: string } = user;
+            const { verified, email, name }: { verified: boolean, email: string, name: string } = user;
 
             if (!verified) {
                 const authToken = new Token({
@@ -59,7 +60,12 @@ export default class UserController {
                 return;
             }
 
-            res.send('AQUI IRA JWT');
+            const jwt = generateJWT({
+                _id: (<string> user._id),
+                email,
+                name,
+            });
+            res.send(jwt);
 
         } catch (error) {
             res.status(500).send('Hubo un error!');
