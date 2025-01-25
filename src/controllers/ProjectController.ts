@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Project } from '../models/Project.model';
 
-export default class ProjectController{
+export default class ProjectController {
     static createProject = async (req: Request, res: Response): Promise<void> => {
         try {
             const verifiedUser = req.verifiedUser;
@@ -13,7 +13,7 @@ export default class ProjectController{
                 description,
                 manager: verifiedUser._id,
             });
-            
+
             await project.save();
 
             res.status(201).send('Projecto creado exitosamente!');
@@ -25,13 +25,18 @@ export default class ProjectController{
     static getProjects = async (req: Request, res: Response): Promise<void> => {
         try {
             const verifiedUser = req.verifiedUser;
-            const projects = await Project.find({
-                $or: [
-                    {manager: verifiedUser._id}
-                ]
-            });
+            const projects = await Project.find().or([{manager: verifiedUser._id}]);
 
             res.json(projects);
+        } catch (error) {
+            res.status(500).send('Hubo un error');
+        }
+    }
+
+    static getProjectByID = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const project = req.project;
+            res.json(project);
         } catch (error) {
             res.status(500).send('Hubo un error');
         }

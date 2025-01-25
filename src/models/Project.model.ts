@@ -1,7 +1,7 @@
 import { Document, PopulatedDoc, Schema, Types, model } from "mongoose";
 import { IUser } from "./User.model";
 
-interface IProject extends Document{
+export interface IProject extends Document{
     title: string;
     client: string
     description: string;
