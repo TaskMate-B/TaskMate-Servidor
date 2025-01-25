@@ -28,4 +28,13 @@ router.post('/create-task/:projectID',
     TaskController.createTask,
 );
 
+// Gets the Tasks
+
+router.get('/get-tasks/:projectID',
+    param('projectID')
+        .isMongoId().withMessage('projectID no válido'),
+    verifyReqErrors,
+    TaskController.getTasks,
+);
+
 export default router;
