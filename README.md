@@ -44,3 +44,9 @@
 * SMTP_PASS
 
 * JWT_KEY
+
+## Para instalar las librerias necesarias del repositorio:
+
+```
+npm i
+```
