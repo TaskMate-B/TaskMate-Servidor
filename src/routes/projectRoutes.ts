@@ -33,8 +33,8 @@ router.get('/get-projects', ProjectController.getProjects);
 
 // Gets a project by ID
 
-router.get('/get-project/:_id',
-    param('_id')
+router.get('/get-project/:projectID',
+    param('projectID')
         .isMongoId().withMessage('ID no válido'),
     verifyReqErrors,
     verifyProjectExists,
@@ -43,8 +43,8 @@ router.get('/get-project/:_id',
 
 // Updates a project
 
-router.put('/update-project/:_id',
-    param('_id')
+router.put('/update-project/:projectID',
+    param('projectID')
         .isMongoId().withMessage('ID no válido'),
     body('title')
         .isString().withMessage('title no válido')
@@ -62,8 +62,8 @@ router.put('/update-project/:_id',
 
 // Deletes a project
 
-router.patch('/delete-project/:_id',
-    param('_id')
+router.patch('/delete-project/:projectID',
+    param('projectID')
         .isMongoId().withMessage('ID no válido'),
     verifyReqErrors,
     verifyProjectExists,
@@ -72,8 +72,8 @@ router.patch('/delete-project/:_id',
 
 // Deletes a project
 
-router.patch('/recover-project/:_id',
-    param('_id')
+router.patch('/recover-project/:projectID',
+    param('projectID')
         .isMongoId().withMessage('ID no válido'),
     verifyReqErrors,
     verifyProjectExists,

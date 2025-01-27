@@ -16,7 +16,7 @@ export default class ProjectController {
 
             await project.save();
 
-            res.status(201).send('Projecto creado exitosamente!');
+            res.status(201).send('Proyecto creado exitosamente!');
         } catch (error) {
             res.status(500).send('Hubo un error');
         }
@@ -25,7 +25,7 @@ export default class ProjectController {
     static getProjects = async (req: Request, res: Response): Promise<void> => {
         try {
             const verifiedUser = req.verifiedUser;
-            const projects = await Project.find().or([{ manager: verifiedUser._id }]);
+            const projects = await Project.find().or([{ manager: verifiedUser._id }]).populate('tasks');
 
             res.json(projects);
         } catch (error) {
@@ -48,7 +48,7 @@ export default class ProjectController {
             await project.updateOne(req.body);
             await project.save();
 
-            res.send('Projecto actualizado correctamente!');
+            res.send('Proyecto actualizado correctamente!');
         } catch (error) {
             res.status(500).send('Hubo un error');
         }
@@ -60,7 +60,7 @@ export default class ProjectController {
             project.status = false
             await project.save();
 
-            res.send('Projecto eliminado correctamente!');
+            res.send('Proyecto eliminado correctamente!');
         } catch (error) {
             res.status(500).send('Hubo un error');
         }
@@ -72,7 +72,7 @@ export default class ProjectController {
             project.status = true
             await project.save();
 
-            res.send('Projecto recuperado correctamente!');
+            res.send('Proyecto recuperado correctamente!');
         } catch (error) {
             res.status(500).send('Hubo un error');
         }

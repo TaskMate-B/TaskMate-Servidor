@@ -11,12 +11,12 @@ declare global{
 
 export const verifyProjectExists = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { _id } = req.params;
+        const { projectID } = req.params;
         const verifiedUser = req.verifiedUser;
-        const project = await Project.findById(_id).or([{ manager: verifiedUser._id }]);
+        const project = await Project.findById(projectID).or([{ manager: verifiedUser._id }]).populate('tasks');
 
         if (!project) {
-            res.status(404).send('No se encontró el projecto!');
+            res.status(404).send('No se encontró el proyecto!');
             return;
         }
 

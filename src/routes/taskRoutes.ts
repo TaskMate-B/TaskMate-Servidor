@@ -4,6 +4,7 @@ import { verifyReqErrors } from "../middlewares/verifyReqErrors";
 import TaskController from "../controllers/TaskController";
 import { authenticateJWT } from "../middlewares/authenticateJWT";
 import { verifyTaskExists } from "../middlewares/task/verifyTaskExists";
+import { verifyProjectExists } from "../middlewares/project/verifyProjectExists";
 
 const router = Router();
 
@@ -26,6 +27,7 @@ router.post('/create-task/:projectID',
         .isString().withMessage('description no válido')
         .notEmpty().withMessage('El description es obligatorio'),
     verifyReqErrors,
+    verifyProjectExists,
     TaskController.createTask,
 );
 
@@ -35,6 +37,7 @@ router.get('/get-tasks/:projectID',
     param('projectID')
         .isMongoId().withMessage('projectID no válido'),
     verifyReqErrors,
+    verifyProjectExists,
     TaskController.getTasks,
 );
 
@@ -46,6 +49,7 @@ router.get('/get-task/:projectID/:taskID',
     param('taskID')
         .isMongoId().withMessage('taskID no válido'),
     verifyReqErrors,
+    verifyProjectExists,
     verifyTaskExists,
     TaskController.getTaskByID,
 );
@@ -67,6 +71,7 @@ router.put('/update-task/:projectID/:taskID',
         .isString().withMessage('description no válido')
         .notEmpty().withMessage('El description es obligatorio'),
     verifyReqErrors,
+    verifyProjectExists,
     verifyTaskExists,
     TaskController.updateTask,
 );
@@ -79,6 +84,7 @@ router.delete('/delete-task/:projectID/:taskID',
     param('taskID')
         .isMongoId().withMessage('taskID no válido'),
     verifyReqErrors,
+    verifyProjectExists,
     verifyTaskExists,
     TaskController.deleteTask,
 );
