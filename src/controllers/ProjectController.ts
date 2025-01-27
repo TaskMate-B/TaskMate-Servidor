@@ -33,13 +33,9 @@ export default class ProjectController {
         }
     }
 
-    static getProjectByID = async (req: Request, res: Response): Promise<void> => {
-        try {
-            const project = req.project;
-            res.json(project);
-        } catch (error) {
-            res.status(500).send('Hubo un error');
-        }
+    static getProjectByID = (req: Request, res: Response): void => {
+        const project = req.project;
+        res.json(project);
     }
 
     static updateProject = async (req: Request, res: Response): Promise<void> => {

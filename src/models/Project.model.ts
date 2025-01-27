@@ -9,6 +9,7 @@ export interface IProject extends Document{
     status: boolean;
     manager: PopulatedDoc<IUser & Document>;
     tasks: PopulatedDoc<ITask & Document>[];
+    members: PopulatedDoc<IUser & Document>[];
 }
 
 const projectSchema = new Schema<IProject>({
@@ -42,6 +43,13 @@ const projectSchema = new Schema<IProject>({
         {
             type: Types.ObjectId,
             ref: 'Task',
+        }
+    ],
+
+    members: [
+        {
+            type: Types.ObjectId,
+            ref: 'User',
         }
     ]
 }, {timestamps: true});

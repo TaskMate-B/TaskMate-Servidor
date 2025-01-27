@@ -25,13 +25,9 @@ export default class TaskController{
         }
     }
 
-    static getTasks = async (req: Request, res: Response): Promise<void> => {
-        try {
-            const { tasks } = req.project;
-            res.json(tasks);
-        } catch (error) {
-            res.status(500).send('Hubo un error!');
-        }
+    static getTasks = (req: Request, res: Response): void => {
+        const { tasks } = req.project;
+        res.json(tasks);
     }
 
     static getTaskByID = async (req: Request, res: Response): Promise<void> => {

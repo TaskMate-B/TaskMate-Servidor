@@ -4,6 +4,8 @@ import { verifyReqErrors } from "../middlewares/verifyReqErrors";
 import ProjectController from "../controllers/ProjectController";
 import { authenticateJWT } from "../middlewares/authenticateJWT";
 import { verifyProjectExists } from "../middlewares/project/verifyProjectExists";
+import MemberController from "../controllers/MemberController";
+import { verifyUserExistsByID } from "../middlewares/member/verifyUserExistsByID";
 
 const router = Router();
 
@@ -80,5 +82,49 @@ router.patch('/recover-project/:projectID',
     ProjectController.recoverProject
 );
 
+
+// Member Routes
+
+// Find a Member by Email
+
+router.get('/find-user',
+    body('email')
+        .isEmail().withMessage('email no válido')
+        .notEmpty().withMessage('El email es obligatorio'),
+    verifyReqErrors,
+    MemberController.findUserByEmail
+);
+
+
+// Adds a Member by ID
+
+router.post('/add-member/:projectID',
+    body('id')
+        .isMongoId().withMessage('ID no válido')
+        .notEmpty().withMessage('El ID es obligatorio'),
+    verifyReqErrors,
+    verifyProjectExists,
+    verifyUserExistsByID,
+    MemberController.addMemberByID
+);
+
+// Gets the members of a project
+
+router.get('/get-members/:projectID',
+    verifyProjectExists,
+    MemberController.getMembers
+);
+
+// Deletes a Member by ID
+
+router.delete('/delete-member/:projectID',
+    body('id')
+        .isMongoId().withMessage('ID no válido')
+        .notEmpty().withMessage('El ID es obligatorio'),
+    verifyReqErrors,
+    verifyProjectExists,
+    verifyUserExistsByID,
+    MemberController.deleteMemberByID
+);
 
 export default router;

@@ -61,7 +61,7 @@ export default class UserController {
             }
 
             const jwt = generateJWT({
-                _id: (<string> user._id),
+                _id: (user._id) as string,
             });
             res.send(jwt);
 
@@ -135,11 +135,11 @@ export default class UserController {
         }
     }
 
-    static confirmPasswordToken = async (req: Request, res: Response): Promise<void> => {
+    static confirmPasswordToken = (req: Request, res: Response): void => {
         const authToken = req.authToken;
         const { type }: { type: string } = authToken;
         
-        if (type !== 'Password Change') {
+        if (type !== TokenType['PASSWORD_CHANGE']) {
             res.status(409).send('El token no es válido');
             return;
         }
@@ -154,7 +154,7 @@ export default class UserController {
             const { type }: { type: string } = authToken;
             const { password }: { password: string } = req.body;
 
-            if (type !== 'Password Change') {
+            if (type !== TokenType['PASSWORD_CHANGE']) {
                 res.status(409).send('El token no es válido');
                 return;
             }
