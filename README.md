@@ -1,10 +1,19 @@
 # Repositorio para el desarrollo de la lógica de negocio de TaskMate
+TaskMate es una aplicación para la gestión de tareas y proyectos, que permite a los usuarios crear, gestionar y colaborar en proyectos de manera eficiente.
 
-## Para instalar las librerias necesarias del Repositorio:
+## Comandos necesarios:
+
+### Para instalar las librerias del Repositorio:
 
 ```
 npm i
 ```
+### Para inicializar el Servidor:
+
+```
+npm run dev
+```
+
 ## Variables de entorno:
 
 1.  Crea un archivo .env en la raiz del Repositorio
