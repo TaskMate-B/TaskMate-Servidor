@@ -16,7 +16,7 @@ export default class TaskController{
 
             const project = req.project;
 
-            project.tasks.push(task);
+            project.tasks = [...project.tasks, task];
             await Promise.allSettled([task.save(), project.save()]);
 
             res.status(201).send('Tarea creada correctamente!');
