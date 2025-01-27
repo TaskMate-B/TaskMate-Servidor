@@ -1,6 +1,25 @@
 # Repositorio para el desarrollo de la lógica de negocio de TaskMate
 
-## User:
+## Para instalar las librerias necesarias del Repositorio:
+
+```
+npm i
+```
+## Variables de entorno:
+
+1.  Crea un archivo .env en la raiz del Repositorio
+
+2.  Agrega las siguientes variables:
+    * MONGO_URI
+    * SMTP_HOST
+    * SMTP_PORT
+    * SMTP_USER
+    * SMTP_PASS
+    * JWT_KEY
+ 
+## Resumen del Repositorio
+
+### User:
 
 - [x] Crea nuevos Users
 - [x] Confirma las cuentas de los Users
@@ -10,7 +29,7 @@
 - [x] Cambia el Password si el Token es válido 
 - [x] Confirma la cuenta si el Token es válido
 
-## Project:
+### Project:
 
 - [x] Crea nuevos Proyectos
 - [x] Obtiene los Proyectos
@@ -19,7 +38,7 @@
 - [x] Elimina los Proyectos
 - [x] Recupera los Proyectos
 
-## Task:
+### Task:
 
 - [x] Crea nuevas Tareas
 - [x] Obtiene las Tareas
@@ -27,26 +46,9 @@
 - [x] Actualizan las Tareas
 - [x] Elimina las Tareas
 
-## Member:
+### Member:
 
 - [x] Encuentra un Usuario por Email
 - [x] Agrega un Usuario al proyecto por su ID
 - [x] Elimina un Usuario al proyecto por su ID
 - [x] Obtiene los Miembros de un Proyecto
-
-## Enviroment Variables:
-
-* MONGO_URI
-
-* SMTP_HOST
-* SMTP_PORT
-* SMTP_USER
-* SMTP_PASS
-
-* JWT_KEY
-
-## Para instalar las librerias necesarias del repositorio:
-
-```
-npm i
-```
