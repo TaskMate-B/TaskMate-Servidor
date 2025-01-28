@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { Task } from "../models/Task.model";
+import { ITask, Task } from "../models/Task.model";
 
 export default class TaskController{
     static createTask = async (req: Request, res: Response): Promise<void> => {
         try {
             const { projectID } = req.params;
-            const { title, status, description }: { title: string, status: string, description: string } = req.body;
+            const { title, status, description }: Pick<ITask, 'title' | 'status' | 'description'> = req.body;
             
             const task = new Task({
                 title,

@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { User } from "../../models/User.model";
+import { IUser, User } from "../../models/User.model";
 
 export const verifyRegisteredEmail = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const { email } : { email: string } = req.body;
+        const { email } : Pick<IUser, 'email'> = req.body;
         const registeredEmail = await User.findOne({email});
 
         if (registeredEmail) {

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { User } from '../models/User.model';
+import { IUser, User } from '../models/User.model';
 import { encryptPassword } from "../utils/encryptPassword";
-import { Token, TokenType } from "../models/Token.model";
+import { IToken, Token, TokenType } from "../models/Token.model";
 import { generarAuthToken } from '../utils/generateAuthToken';
 import { comparePassword } from "../utils/comparePassword";
 import AuthEmail from "../emails/AuthEmail";
@@ -10,7 +10,7 @@ import { generateJWT } from "../utils/generateJWT";
 export default class UserController {
     static createUser = async (req: Request, res: Response): Promise<void> => {
         try {
-            const { password, email }: { password: string, email: string } = req.body;
+            const { password, email }: Pick<IUser, 'password' | 'email'> = req.body;
             const user = new User(req.body);
 
             user.password = await encryptPassword(password);
@@ -21,7 +21,7 @@ export default class UserController {
                 user: user._id,
             })
 
-            const { token }: { token: string } = authToken;
+            const { token }: Pick<IToken, 'token'> = authToken;
 
             await Promise.allSettled([user.save(), authToken.save(), AuthEmail.sendAuthToken(email, token)]);
             res.status(201).send('Usuario creado exitosamente! Te hemos enviado un email para confirmar tu cuenta!');
@@ -33,10 +33,10 @@ export default class UserController {
     static login = async (req: Request, res: Response): Promise<void> => {
         try {
             const user = req.user;
-            const { password }: { password: string } = req.body;
+            const { password }: Pick<IUser, 'password'> = req.body;
 
             //Verifies that the user is verified
-            const { verified, email }: { verified: boolean, email: string } = user;
+            const { verified, email }: Pick<IUser, 'verified' | 'email'> = user;
 
             if (!verified) {
                 const authToken = new Token({
@@ -45,7 +45,7 @@ export default class UserController {
                     user: user._id,
                 });
 
-                const { token }: { token: string } = authToken;
+                const { token }: Pick<IToken, 'token'> = authToken;
                 await Promise.allSettled([authToken.save(), AuthEmail.sendAuthToken(email, token)]);
                 res.status(409).send('Tu cuenta no está confirmada! Te hemos enviado un email para confirmar tu cuenta!');
                 return;
@@ -73,7 +73,7 @@ export default class UserController {
     static requestAuthToken = async (req: Request, res: Response): Promise<void> => {
         try {
             const user = req.user;
-            const { verified, email }: { verified: boolean, email: string } = user;
+            const { verified, email }: Pick<IUser, 'verified' | 'email'> = user;
 
             if (verified) {
                 res.status(409).send('La cuenta ya está confirmada!');
@@ -86,7 +86,7 @@ export default class UserController {
                 user: user._id,
             })
 
-            const { token }: { token: string } = authToken;
+            const { token }: Pick<IToken, 'token'> = authToken;
             await Promise.allSettled([authToken.save(), AuthEmail.sendAuthToken(email, token)]);
             res.send('Te hemos enviado un email para confirmar tu cuenta!');
 
@@ -98,7 +98,7 @@ export default class UserController {
     static requestPasswordChange = async (req: Request, res: Response): Promise<void> => {
         try {
             const user = req.user;
-            const { email }: { email:string } = user;
+            const { email }: Pick<IUser, 'email'> = user;
 
             const authToken = new Token({
                 token: generarAuthToken(),
@@ -106,7 +106,7 @@ export default class UserController {
                 user: user._id,
             })
 
-            const { token }: { token: string } = authToken;
+            const { token }: Pick<IToken, 'token'> = authToken;
             await Promise.allSettled([authToken.save(), AuthEmail.sendPasswordToken(email, token)]);
             res.send('Te hemos enviado un email para confirmar el cambio de password!');
 
@@ -118,7 +118,7 @@ export default class UserController {
     static confirmUser = async (req: Request, res: Response): Promise<void> => {
         try {
             const authToken = req.authToken;
-            const { type }: { type: string } = authToken;
+            const { type }: Pick<IToken, 'type'> = authToken;
 
             if (type !== TokenType['CONFIRM_ACCOUNT']) {
                 res.status(409).send('El token no es válido');
@@ -137,7 +137,7 @@ export default class UserController {
 
     static confirmPasswordToken = (req: Request, res: Response): void => {
         const authToken = req.authToken;
-        const { type }: { type: string } = authToken;
+        const { type }: Pick<IToken, 'type'> = authToken;
         
         if (type !== TokenType['PASSWORD_CHANGE']) {
             res.status(409).send('El token no es válido');
@@ -151,8 +151,8 @@ export default class UserController {
         try {
             const user = req.user;
             const authToken = req.authToken;
-            const { type }: { type: string } = authToken;
-            const { password }: { password: string } = req.body;
+            const { type }: Pick<IToken, 'type'> = authToken;
+            const { password }: Pick<IUser, 'password'> = req.body;
 
             if (type !== TokenType['PASSWORD_CHANGE']) {
                 res.status(409).send('El token no es válido');

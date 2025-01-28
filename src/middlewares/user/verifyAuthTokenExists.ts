@@ -13,7 +13,7 @@ declare global{
 
 export const verifyAuthTokenExists = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const { token }: { token: string } = req.body;
+        const { token }: Pick<IToken, 'token'> = req.body;
         const authToken = await Token.findOne({ token });
 
         if (!authToken) {

@@ -11,7 +11,7 @@ declare global{
 
 export const verifyUserExistsByID = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { id } = req.body;
+        const { id }: Pick<IUser, 'id'> = req.body;
         const user = await User.findById(id);
 
         if (!user) {

@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { Project } from '../models/Project.model';
+import { IProject, Project } from '../models/Project.model';
 
 export default class ProjectController {
     static createProject = async (req: Request, res: Response): Promise<void> => {
         try {
             const verifiedUser = req.verifiedUser;
-            const { title, client, description }: { title: string, client: string, description: string } = req.body;
+            const { title, client, description }: Pick<IProject, 'title' | 'client' | 'description'> = req.body;
 
             const project = new Project({
                 title,

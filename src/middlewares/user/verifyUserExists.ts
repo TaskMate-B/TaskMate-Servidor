@@ -11,7 +11,7 @@ declare global{
 
 export const verifyUserExists = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const { email }: { email: string } = req.body;
+        const { email }: Pick<IUser, 'email'> = req.body;
         const user = await User.findOne({ email });
 
         if (!user) {

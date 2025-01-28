@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
-import { User } from "../models/User.model";
+import { IUser, User } from "../models/User.model";
+import { IProject } from "../models/Project.model";
 
 export default class MemberController{
     static findUserByEmail = async (req: Request, res: Response): Promise<void> => {
         try {
-            const { email }: { email: string } = req.body;
+            const { email }: Pick<IUser, 'email'> = req.body;
             const user = await User.findOne({email}).select('_id name email');
 
             if (!user){
@@ -48,10 +49,10 @@ export default class MemberController{
     static deleteMemberByID = async (req: Request, res: Response): Promise<void> => {
         try {
             const project = req.project;
-            const { members } = project;
+            const { members }: Pick<IProject, 'members'> = project;
 
             const user = req.user;
-            const { id } = user;
+            const { id }: Pick<IUser, 'id'> = user;
 
             if (!members.some(member => member?.id.toString() === id)){
                 res.status(409).send('No se encontró el usuario en el proyecto!');
