@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { IUser } from "../../models/User.model";
 
 type ConfirmPasswordField = {
-    confirm_password: string
+    confirm_password: IUser['password'];
 }
 
 export const verifyPasswords = (req: Request, res: Response, next: NextFunction): void => {
