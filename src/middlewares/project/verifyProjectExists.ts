@@ -13,10 +13,12 @@ export const verifyProjectExists = async (req: Request, res: Response, next: Nex
     try {
         const { projectID } = req.params;
         const verifiedUser = req.verifiedUser;
-        const project = await Project.findById(projectID).or([{ manager: verifiedUser._id }]).populate('tasks').populate({
-            path: 'members',
-            select: 'id name email'
-        });
+        const project = await Project.findById(projectID).or([{ manager: verifiedUser._id }])
+            .populate('tasks')
+            .populate({
+                path: 'members',
+                select: 'id name email'
+            });
 
         if (!project) {
             res.status(404).send('No se encontró el proyecto!');
