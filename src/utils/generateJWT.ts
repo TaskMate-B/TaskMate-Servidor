@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 type PayloadUser = {
-    _id: string;
+    id: string;
 }
 
 

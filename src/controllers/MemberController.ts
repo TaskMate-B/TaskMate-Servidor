@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
 import { IUser, User } from "../models/User.model";
-import { IProject } from "../models/Project.model";
 
 export default class MemberController{
     static findUserByEmail = async (req: Request, res: Response): Promise<void> => {
         try {
-            const { email }: Pick<IUser, 'email'> = req.body;
+            const { email }: IUser = req.body;
             const user = await User.findOne({email}).select('_id name email');
 
             if (!user){
@@ -21,10 +20,8 @@ export default class MemberController{
 
     static addMemberByID = async (req: Request, res: Response): Promise<void> => {
         try {
-            const project = req.project;
+            const { project, user } = req;
             const { members } = project;
-
-            const user = req.user;
             const { id } = user;
 
             if (members.some(member => member?.id.toString() === id)){
@@ -42,17 +39,14 @@ export default class MemberController{
     }
 
     static getMembers = (req: Request, res: Response): void => {
-        const project = req.project;
-        res.json(project.members);
+        const { project: {members} } = req;
+        res.json(members);
     }
 
     static deleteMemberByID = async (req: Request, res: Response): Promise<void> => {
         try {
-            const project = req.project;
-            const { members }: Pick<IProject, 'members'> = project;
-
-            const user = req.user;
-            const { id }: Pick<IUser, 'id'> = user;
+            const { project, user: { id } } = req;
+            const { members } = project;
 
             if (!members.some(member => member?.id.toString() === id)){
                 res.status(409).send('No se encontró el usuario en el proyecto!');
