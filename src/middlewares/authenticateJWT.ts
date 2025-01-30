@@ -18,7 +18,7 @@ export const authenticateJWT = async (req: Request, res: Response, next: NextFun
         return;
     }
 
-    const token = bearer.split(' ')[1];
+    const [ , token ] = bearer.split(' ');
     
     try {
         const decoded = jwt.verify(token, process.env.JWT_KEY!);
