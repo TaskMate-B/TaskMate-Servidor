@@ -18,18 +18,21 @@ export const authenticateJWT = async (req: Request, res: Response, next: NextFun
         return;
     }
 
+    console.log('AQUI');
+
     const [ , token ] = bearer.split(' ');
     
     try {
         const decoded = jwt.verify(token, process.env.JWT_KEY!);
-        if (typeof decoded === 'object' && decoded._id) {
-            const verifiedUser = await User.findById(decoded._id).select('name email');
+        console.log(decoded);
+        if (typeof decoded === 'object' && decoded.id) {
+            const verifiedUser = await User.findById(decoded.id).select('_id name email');
 
             if (!verifiedUser){
                 res.status(401).send('No estás autenticado!');
                 return;
             }
-
+            console.log(verifiedUser);
             req.verifiedUser = verifiedUser;
             next();
         }
