@@ -19,12 +19,14 @@ npm run dev
 1.  Crea un archivo .env en la raiz del Repositorio
 
 2.  Agrega las siguientes variables:
-    * MONGO_URI
-    * SMTP_HOST
-    * SMTP_PORT
-    * SMTP_USER
-    * SMTP_PASS
-    * JWT_KEY
+```
+MONGO_URI=
+SMTP_HOST=
+SMTP_PORT=
+SMTP_USER=
+SMTP_PASS=
+JWT_KEY=
+```
  
 ## Resumen del Repositorio
 
