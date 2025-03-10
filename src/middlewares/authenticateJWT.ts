@@ -32,7 +32,6 @@ export const authenticateJWT = async (req: Request, res: Response, next: NextFun
                 res.status(401).send('No estás autenticado!');
                 return;
             }
-            console.log(verifiedUser);
             req.verifiedUser = verifiedUser;
             next();
         }

@@ -1,0 +1,627 @@
+openapi: 3.0.0
+info:
+  title: TaskMate - MERN
+  version: 1.0.0
+servers:
+  - url: http://localhost:4000
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+tags:
+  - name: User
+  - name: Project
+  - name: Task
+  - name: Member
+paths:
+  /api/user/create-user:
+    post:
+      tags:
+        - User
+      summary: Creates a new User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: john
+                email: john@gmail.com
+                password: '12345678'
+                confirm_password: '12345678'
+      responses:
+        '201':
+          description: Usuario creado exitosamente! Te hemos enviado un email para confirmar tu cuenta!
+          content:
+            application/json: {}
+        '409':
+          description: El email ya está registrado! Utiliza otro.
+          content:
+            application/json: {}
+        '500':
+          description: Hubo un error!
+          content:
+            application/json: {}
+  /api/user/confirm-user:
+    post:
+      tags:
+        - User
+      summary: Confirms the User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                token: '207053'
+      responses:
+        '200':
+          description: Tu cuenta ha sido confirmada!
+          content:
+            application/json: {}
+        '409':
+          description: El token no es válido
+          content:
+            application/json: {}
+        '500':
+          description: Hubo un error!
+          content:
+            application/json: {}
+  /api/user/login:
+    post:
+      tags:
+        - User
+      summary: Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: john@gmail.com
+                password: '12345678'
+      responses:
+        '200':
+          description: JWT token
+          content:
+            application/json: {}
+        '401':
+          description: El password es incorrecto!
+          content:
+            application/json: {}
+        '404':
+          description: No se encontró al usuario con el email registrado!
+          content:
+            application/json: {}
+        '409':
+          description: Tu cuenta no está confirmada! Te hemos enviado un email para confirmar tu cuenta!
+          content:
+            application/json: {}
+        '500':
+          description: Hubo un error!
+          content:
+            application/json: {}
+  /api/user/request-auth-token:
+    post:
+      tags:
+        - User
+      summary: Requests a new AUTH TOKEN
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: jack@gmail.com
+      responses:
+        '200':
+          description: Te hemos enviado un email para confirmar tu cuenta!
+          content:
+            application/json: {}
+        '409':
+          description: La cuenta ya está confirmada!
+          content:
+            application/json: {}
+        '500':
+          description: Hubo un error!
+          content:
+            application/json: {}
+  /api/user/request-password-change:
+    post:
+      tags:
+        - User
+      summary: Requests a PASSWORD CHANGE
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: nyx@gmail.com
+      responses:
+        '200':
+          description: Te hemos enviado un email para confirmar el cambio de password!
+          content:
+            application/json: {}
+        '500':
+          description: Hubo un error!
+          content:
+            application/json: {}
+  /api/user/confirm-password-token:
+    post:
+      tags:
+        - User
+      summary: Confirms the PASSWORD TOKEN
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                token: '306956'
+      responses:
+        '200':
+          description: Introduce los siguientes datos para cambiar tu password!
+          content:
+            application/json: {}
+        '409':
+          description: El token no es válido
+          content:
+            application/json: {}
+        '500':
+          description: Hubo un error!
+          content:
+            application/json: {}
+  /api/user/change-password:
+    post:
+      tags:
+        - User
+      summary: Changes the password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                token: '306956'
+                password: '12345678'
+                confirm_password: '12345678'
+      responses:
+        '200':
+          description: El password fue modificado exitosamente!
+          content:
+            application/json: {}
+        '409':
+          description: El token no es válido
+          content:
+            application/json: {}
+        '500':
+          description: Hubo un error!
+          content:
+            application/json: {}
+  /api/project/create-project:
+    post:
+      tags:
+        - Project
+      summary: Creates a new Project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                title: Zapateria
+                description: Pagina web para un sitio de Zapateria
+                client: Shellcol
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: Proyecto creado exitosamente!
+          content:
+            application/json: {}
+        '500':
+          description: Hubo un error
+          content:
+            application/json: {}
+  /api/project/get-projects:
+    get:
+      tags:
+        - Project
+      summary: Gets the Projects
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of projects
+          content:
+            application/json: {}
+        '500':
+          description: Hubo un error
+          content:
+            application/json: {}
+  /api/project/get-project/{projectID}:
+    get:
+      tags:
+        - Project
+      summary: Gets a Project By ID
+      parameters:
+        - name: projectID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the project
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Project details
+          content:
+            application/json: {}
+        '404':
+          description: No se encontró el proyecto!
+          content:
+            application/json: {}
+        '500':
+          description: Hubo un error!
+          content:
+            application/json: {}
+  /api/project/update-project/{projectID}:
+    put:
+      tags:
+        - Project
+      summary: Updates a Project
+      parameters:
+        - name: projectID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                title: Tanki Online
+                client: Jack Calavera
+                description: Desarrollar pagina web dedicado a los tanques
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Proyecto actualizado correctamente!
+          content:
+            application/json: {}
+        '404':
+          description: No se encontró el proyecto!
+          content:
+            application/json: {}
+        '500':
+          description: Hubo un error
+          content:
+            application/json: {}
+  /api/project/delete-project/{projectID}:
+    patch:
+      tags:
+        - Project
+      summary: Deletes a Project
+      parameters:
+        - name: projectID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the project
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Proyecto eliminado correctamente!
+          content:
+            application/json: {}
+        '404':
+          description: No se encontró el proyecto!
+          content:
+            application/json: {}
+        '500':
+          description: Hubo un error
+          content:
+            application/json: {}
+  /api/project/recover-project/{projectID}:
+    patch:
+      tags:
+        - Project
+      summary: Recovers a Project
+      parameters:
+        - name: projectID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the project
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Proyecto recuperado correctamente!
+          content:
+            application/json: {}
+        '404':
+          description: No se encontró el proyecto!
+          content:
+            application/json: {}
+        '500':
+          description: Hubo un error
+          content:
+            application/json: {}
+  /api/task/create-task/{projectID}:
+    post:
+      tags:
+        - Task
+      summary: Creates a new Task
+      parameters:
+        - name: projectID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                title: Diseñar la base del proyecto
+                status: Pending
+                description: Diseñar la base del proyecto en Figma
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: Tarea creada correctamente!
+          content:
+            application/json: {}
+        '500':
+          description: Hubo un error!
+          content:
+            application/json: {}
+  /api/task/get-tasks/{projectID}:
+    get:
+      tags:
+        - Task
+      summary: Gets the Tasks
+      parameters:
+        - name: projectID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the project
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of tasks
+          content:
+            application/json: {}
+        '500':
+          description: Hubo un error!
+          content:
+            application/json: {}
+  /api/task/get-task/{projectID}/{taskID}:
+    get:
+      tags:
+        - Task
+      summary: Gets a Task by ID
+      parameters:
+        - name: projectID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the project
+        - name: taskID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the task
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Task details
+          content:
+            application/json: {}
+        '404':
+          description: No se encontró la tarea!
+          content:
+            application/json: {}
+        '500':
+          description: Hubo un error!
+          content:
+            application/json: {}
+  /api/task/update-task/{projectID}/{taskID}:
+    put:
+      tags:
+        - Task
+      summary: Updates a Task
+      parameters:
+        - name: projectID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the project
+        - name: taskID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the task
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                title: Elegir Base de datos
+                status: Pending
+                description: Elegir entre MongoDB, MySQL y PostgreSQL
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Tarea actualizada correctamente!
+          content:
+            application/json: {}
+        '404':
+          description: No se encontró la tarea!
+          content:
+            application/json: {}
+        '500':
+          description: Hubo un error!
+          content:
+            application/json: {}
+  /api/task/delete-task/{projectID}/{taskID}:
+    delete:
+      tags:
+        - Task
+      summary: Deletes a Task
+      parameters:
+        - name: projectID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the project
+        - name: taskID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the task
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Tarea eliminada correctamente!
+          content:
+            application/json: {}
+        '404':
+          description: No se encontró la tarea!
+          content:
+            application/json: {}
+        '500':
+          description: Hubo un error!
+          content:
+            application/json: {}
+  /api/project/find-user:
+    get:
+      tags:
+        - Member
+      summary: Finds a Member by Email
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json: {}
+        '404':
+          description: No se encontró al usuario!
+          content:
+            application/json: {}
+        '500':
+          description: Hubo un error!
+          content:
+            application/json: {}
+  /api/project/add-member/{projectID}:
+    post:
+      tags:
+        - Member
+      summary: Adds a Member by ID
+      parameters:
+        - name: projectID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                id: 67970ae640ab3a23fd6257b7
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Usuario agregado al proyecto correctamente!
+          content:
+            application/json: {}
+        '409':
+          description: El usuario ya está agregado en el proyecto!
+          content:
+            application/json: {}
+        '500':
+          description: Hubo un error!
+          content:
+            application/json: {}
+  /api/project/delete-member/{projectID}:
+    delete:
+      tags:
+        - Member
+      summary: Deletes a Member by ID
+      parameters:
+        - name: projectID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the project
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Usuario eliminado del proyecto correctamente!
+          content:
+            application/json: {}
+        '409':
+          description: No se encontró el usuario en el proyecto!
+          content:
+            application/json: {}
+        '500':
+          description: Hubo un error!
+          content:
+            application/json: {}
+  /api/project/get-members/{projectID}:
+    get:
+      tags:
+        - Member
+      summary: Gets the Members of a Project
+      parameters:
+        - name: projectID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the project
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of members
+          content:
+            application/json: {}
+        '500':
+          description: Hubo un error!
+          content:
+            application/json: {}
