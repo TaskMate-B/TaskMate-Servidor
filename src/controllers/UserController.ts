@@ -21,7 +21,7 @@ export default class UserController {
                 token: generarAuthToken(),
                 type: TokenType['CONFIRM_ACCOUNT'],
                 user: id,
-            })
+            }) 
 
             const { token } = authToken;
 

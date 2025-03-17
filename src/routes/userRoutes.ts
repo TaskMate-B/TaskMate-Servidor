@@ -97,7 +97,7 @@ router.post('/confirm-password-token',
     verifyReqErrors,
     verifyAuthTokenExists,
     UserController.confirmPasswordToken
-);
+); 
 
 // Changes the password
 
