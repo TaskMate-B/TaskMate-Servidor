@@ -29,7 +29,7 @@ router.post('/create-user',
     verifyPasswords,
     UserController.createUser
 );
-
+  
 // Login
 
 router.post('/login',
@@ -40,9 +40,9 @@ router.post('/login',
         .isString().withMessage('password no válido')
         .notEmpty().withMessage('El password es obligatorio'),
     verifyReqErrors,
-    verifyUserExists,
+    verifyUserExists, 
     UserController.login
-);
+); 
 
 // Requests a new AUTH TOKEN
 
