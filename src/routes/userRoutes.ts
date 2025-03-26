@@ -6,6 +6,7 @@ import { verifyPasswords } from "../middlewares/user/verifyPasswords";
 import { verifyRegisteredEmail } from '../middlewares/user/verifyRegisteredEmail';
 import { verifyAuthTokenExists } from "../middlewares/user/verifyAuthTokenExists";
 import { verifyUserExists } from "../middlewares/user/verifyUserExists";
+import { authenticateJWT } from "../middlewares/authenticateJWT";
 
 const router = Router();
 
@@ -117,6 +118,22 @@ router.post('/change-password',
     UserController.changePassword
 );
 
+router.get('/get-profile', 
+    authenticateJWT,
+    UserController.getProfile
+)
 
+router.put('/update-profile', 
+    authenticateJWT,
+    body('name')
+        .isString().withMessage('name no válido')
+        .notEmpty().withMessage('El name es obligatorio'),
+    body('email')
+        .isEmail().withMessage('email no válido')
+        .notEmpty().withMessage('El email es obligatorio'),
+    verifyReqErrors,
+    verifyRegisteredEmail,
+    UserController.updateProfile
+)
 
 export default router;

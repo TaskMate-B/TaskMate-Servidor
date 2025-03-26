@@ -164,4 +164,25 @@ export default class UserController {
             res.status(500).send('Hubo un error!');
         }
     }
+
+    static getProfile = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const { verifiedUser } = req;
+            res.json(verifiedUser);
+        } catch (error) {
+            res.status(500).send('Hubo un error!');
+        }
+    }
+
+    static updateProfile = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const { verifiedUser } = req;
+            await verifiedUser.updateOne(req.body);
+            await verifiedUser.save();
+
+            res.send('La cuenta ha sido actualizada!');
+        } catch (error) {
+            res.status(500).send('Hubo un error!');
+        }
+    }
 }

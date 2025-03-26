@@ -4,9 +4,10 @@ import { IUser, User } from "../../models/User.model";
 export const verifyRegisteredEmail = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { email } : Pick<IUser, 'email'> = req.body;
+        const { verifiedUser: { id: userID } } = req
         const registeredEmail = await User.findOne({email});
 
-        if (registeredEmail) {
+        if (registeredEmail && userID !== registeredEmail.id) {
             res.status(409).send('El email ya está registrado! Utiliza otro.');
             return;
         }
