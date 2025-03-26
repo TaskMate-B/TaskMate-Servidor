@@ -128,11 +128,7 @@ router.put('/update-profile',
     body('name')
         .isString().withMessage('name no válido')
         .notEmpty().withMessage('El name es obligatorio'),
-    body('email')
-        .isEmail().withMessage('email no válido')
-        .notEmpty().withMessage('El email es obligatorio'),
     verifyReqErrors,
-    verifyRegisteredEmail,
     UserController.updateProfile
 )
 
