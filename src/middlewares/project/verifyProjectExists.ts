@@ -13,7 +13,17 @@ export const verifyProjectExists = async (req: Request, res: Response, next: Nex
     try {
         const { projectID } = req.params;
         const verifiedUser = req.verifiedUser;
-        const project = await Project.findById(projectID).or([{ manager: verifiedUser._id }])
+        const project = await Project.findById(projectID).or(
+            [
+                { 
+                    manager: verifiedUser._id 
+                },
+                { 
+                    members: {
+                        $in: verifiedUser._id 
+                    }
+                }
+            ])
             .populate('tasks')
             .populate({
                 path: 'members',
