@@ -88,10 +88,6 @@ router.patch('/recover-project/:projectID',
 // Find a Member by Email
 
 router.get('/find-user',
-    body('email')
-        .isEmail().withMessage('email no válido')
-        .notEmpty().withMessage('El email es obligatorio'),
-    verifyReqErrors,
     MemberController.findUserByEmail
 );
 

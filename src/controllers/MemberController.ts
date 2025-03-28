@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
-import { IUser, User } from "../models/User.model";
+import { User } from "../models/User.model";
 
 export default class MemberController{
     static findUserByEmail = async (req: Request, res: Response): Promise<void> => {
         try {
-            const { email }: IUser = req.body;
+            const { email } = req.query;
+            console.log(email);
             const user = await User.findOne({email}).select('_id name email');
 
             if (!user){
