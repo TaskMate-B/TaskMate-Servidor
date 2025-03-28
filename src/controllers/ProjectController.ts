@@ -25,11 +25,20 @@ export default class ProjectController {
     static getProjects = async (req: Request, res: Response): Promise<void> => {
         try {
             const { verifiedUser: { id } } = req;
-            const projects = await Project.find().or([{ manager: id }]).populate('tasks');
+            const projects = await Project.find().or([
+                { 
+                    manager: id 
+                }, 
+                {
+                    members: {
+                        $in: id
+                    }
+                }
+                ]).populate('tasks');
 
             res.json(projects);
         } catch (error) {
-            res.status(500).send('Hubo un error');
+            console.log(error);
         }
     }
 
