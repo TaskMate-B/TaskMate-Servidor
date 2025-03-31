@@ -11,9 +11,8 @@ export default class AuthEmail {
                     <html>
                         <body>
                             <h2>¡Hola!</h2>
-                            <p>Gracias por registrarte en TaskMate. Para confirmar tu cuenta, por favor haz clic en el siguiente enlace:</p>
-                            <p><a href="#">Confirmar mi cuenta</a></p>
-                            <p>Tu token de confirmación es: <strong>${token}</strong></p>
+                            <p>Gracias por registrarte en TaskMate.</p>
+                            <p>Tu token para la confirmación de la cuenta es: <strong>${token}</strong></p>
                             <p>Si no has solicitado este registro, puedes ignorar este mensaje.</p>
                             <p>Saludos,<br>El equipo de TaskMate</p>
                         </body>
@@ -35,9 +34,8 @@ export default class AuthEmail {
                     <html>
                         <body>
                             <h2>¡Hola!</h2>
-                            <p>Recibimos una solicitud para cambiar tu contraseña en TaskMate. Para confirmar el cambio, por favor haz clic en el siguiente enlace:</p>
-                            <p><a href="#"">Confirmar cambio de contraseña</a></p>
-                            <p>Tu token de confirmación es: <strong>${token}</strong></p>
+                            <p>Recibimos una solicitud para cambiar tu contraseña en TaskMate.</p>
+                            <p>Tu token para la confirmación del cambio de tu contraseña es: <strong>${token}</strong></p>
                             <p>Si no has solicitado este cambio, por favor ignora este mensaje.</p>
                             <p>Saludos,<br>El equipo de TaskMate</p>
                         </body>
