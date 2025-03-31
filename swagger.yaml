@@ -200,6 +200,76 @@ paths:
           description: Hubo un error!
           content:
             application/json: {}
+  /api/user/get-profile:
+    get:
+      tags:
+        - User
+      summary: Gets the authenticated user's profile
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User profile details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    example: 507f1f77bcf86cd799439011
+                  name:
+                    type: string
+                    example: John Doe
+                  email:
+                    type: string
+                    example: john@example.com
+        '401':
+          description: Unauthorized (invalid or missing token)
+          content:
+            application/json: {}
+        '500':
+          description: Hubo un error!
+          content:
+            application/json: {}
+
+  /api/user/update-profile:
+    put:
+      tags:
+        - User
+      summary: Updates the authenticated user's profile
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  example: Updated Name
+              example:
+                name: Updated Name
+      responses:
+        '200':
+          description: La cuenta ha sido actualizada!
+          content:
+            application/json: {}
+        '400':
+          description: Invalid input (name validation failed)
+          content:
+            application/json: {}
+        '401':
+          description: Unauthorized (invalid or missing token)
+          content:
+            application/json: {}
+        '500':
+          description: Hubo un error!
+          content:
+            application/json: {}
   /api/project/create-project:
     post:
       tags:
